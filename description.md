@@ -28,7 +28,6 @@ Subversion http://github.com/cloudera/hadoop -r 307b3de961d083f6e8ee80ddba589f22
 Compiled by jenkins on 2017-01-20T20:12Z
 Compiled with protoc 2.5.0
 From source with checksum 9ee56c2ef46d6f9fae2f8b199c0e2c9
-
 ```
 and **HIVE** of version
 ```
