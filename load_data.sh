@@ -16,14 +16,20 @@ DB_NAME="task1"
 TMP_TABLE_NAME="LZ_COUNTRY_CODE_GOOGLE_TEMP_TXT"
 TABLE_NAME="LZ_COUNTRY_CODE_GOOGLE"
 
+# load data into temp table stored as textfile 
+if ! hive -e "LOAD DATA LOCAL INPATH '$FILE_PATH' OVERWRITE INTO TABLE "$DB_NAME"."$TMP_TABLE_NAME";"; then 
+	exit 2
+fi
 
-hive -e "LOAD DATA LOCAL INPATH '$FILE_PATH' OVERWRITE INTO TABLE "$DB_NAME"."$TMP_TABLE_NAME";"
+# insert into main table with needed transformations
+if ! hive -e "INSERT INTO TABLE "$DB_NAME"."$TABLE_NAME" SELECT COUNTRY_CODE, COUNTRY_CODE3, COUNTRY_NAME, CURRENT_TIMESTAMP FROM "$DB_NAME"."$TMP_TABLE_NAME";"; then 
+	exit 3
+fi
 
-hive -e "INSERT INTO TABLE "$DB_NAME"."$TABLE_NAME" SELECT COUNTRY_CODE, COUNTRY_CODE3, COUNTRY_NAME, CURRENT_TIMESTAMP FROM "$DB_NAME"."$TMP_TABLE_NAME";"
-
+# truncate temp table
 hive -e "TRUNCATE TABLE "$DB_NAME"."$TMP_TABLE_NAME";"
 
-
+# check that data has been loaded properly
 table_row_count=$( cut -d " " -f 1 <<< $(hive -S -e "SELECT COUNT(*) FROM "$DB_NAME"."$TABLE_NAME";"))
 file_row_count=$(($(wc -l < "$FILE_PATH")-1))
 
