@@ -49,10 +49,14 @@ The first file is an initial hql script that creates two tables:
 
 It invoked by command:
 ```
-hive -f create_tables.hql
+$ hive -f create_tables.hql
 ```
 
-The second script loads data from file from local file system to target table. Script takes file path as an argument. At the beginning it checks the number of input args and empty string as file path, if it fails - exit with code 1 (first stage), else continue. 
+The second script loads data from file from local file system to target table. Script takes file path as an argument.
+```
+$ ./load_data.sh FILE_PATH
+```
+At the beginning it checks the number of input args and empty string as file path, if it fails - exit with code 1 (first stage), else continue. 
 
 The loading process divides into two steps:
  - loading into temp table;
