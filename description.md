@@ -37,7 +37,11 @@ Subversion file:///data0/jenkins/workspace/generic-package-rhel64-6-0/topdir/BUI
 Compiled by jenkins on Fri Jan 20 12:09:45 PST 2017
 From source with checksum 4a42117e513a0970c0edf58cd0575d4e
 ```
-
+The solution consist of two files: 
+ - create_tables.hql
+ - load_data.sh
+ 
+ 
 
 
 
