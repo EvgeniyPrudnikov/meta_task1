@@ -2,9 +2,9 @@
 > 1. Install any Hadoop + Hive distro
 > 2. Attached file **country_code_google.csv** have to be loaded into hive table LZ_COUNTRY_CODE_GOOGLE
 > 3. Please create this table and provide a script which does the following:
->	- Takes path of the file attached as an argument (local file system)
->	- Loads the data from file into table
->	- Queries the table and ensures data has been loaded properly (verify row count from hive query against actual number of rows in the file)
+>	 - Takes path of the file attached as an argument (local file system)
+>	 - Loads the data from file into table
+>	 - Queries the table and ensures data has been loaded properly (verify row count from hive query against actual number of rows in the file)
 > 4. Provide a short description of what’s been done **in English**. Just a few words regarding what type of table are you using, how loading process organized etc.
 > 
 > **THINGS TO PAY ATTENTION TO**
@@ -38,8 +38,15 @@ Compiled by jenkins on Fri Jan 20 12:09:45 PST 2017
 From source with checksum 4a42117e513a0970c0edf58cd0575d4e
 ```
 The solution consist of two files: 
- - create_tables.hql
- - load_data.sh
+
+ - [create_tables.hql](https://github.com/EvgeniyPrudnikov/meta_task1/blob/master/create_tables.hql)
+ - [load_data.sh](https://github.com/EvgeniyPrudnikov/meta_task1/blob/master/load_data.sh)
+ 
+The first file is initial hql script that creates two tables:
+
+ - **LZ_COUNTRY_CODE_GOOGLE_TEMP_TXT** - temp table, used for initial load without any transformations, hide header row (table properties), stored as textfile
+ - **LZ_COUNTRY_CODE_GOOGLE** - target table, have timestamp field for maintaining data load history, stored as parquet (it maybe any needed store format, depend on futher using of data)
+ 
  
  
 
