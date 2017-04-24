@@ -45,23 +45,23 @@ The solution consist of two files:
 The first file is an initial hql script that creates two tables:
 
  - **LZ_COUNTRY_CODE_GOOGLE_TEMP_TXT** - temp table, used for initial load without any transformations, *hide header row* (table properties), stored as textfile;
- - **LZ_COUNTRY_CODE_GOOGLE** - target table, have timestamp field for maintaining data load history, stored as parquet (it maybe any needed store format, depends on futher using of data);
+ - **LZ_COUNTRY_CODE_GOOGLE** - target table, have timestamp field for maintaining data load history, stored as parquet (it maybe any needed store format, depends on further using of data);
 
 It invoked by command:
 ```
 hive -f create_tables.hql
 ```
 
-The second script loads data from file from local file system to target table. Script takes file path as an argument. At the beginning it checks the number of input args and empty string as file path, if it fails - leave with exit code 1 (first stage), else continue. 
+The second script loads data from file from local file system to target table. Script takes file path as an argument. At the beginning it checks the number of input args and empty string as file path, if it fails - exit with code 1 (first stage), else continue. 
 
 The loading process divides into two steps:
  - loading into temp table;
  - loading into target table;
 
-At the first step script uses hive standart data loading mecanism (LOAD DATA .. INPATH .. INTO TABLE, that just copies the file into the table directory) to load file into temp table as is, but with a slight nuance: temp table also hides (the row is still in HDFS file) the header row (tblproperties("skip.header.line.count"="1")). If it step fails - exit with code 2.
+At the first step script uses hive standard data loading mechanism (LOAD DATA .. INPATH .. INTO TABLE, that just copies the file into the table directory) to load file into temp table as is, but with a slight nuance: temp table also hides (the row is still in HDFS file) the header row (tblproperties("skip.header.line.count"="1")). If it step fails - exit with code 2.
 
-At the second step we insert data from temp table into the target table with adding current timestamp for maintaining data load history. Here we can do any needed transformations (add additional columns, remove dublicates, incremental load and etc.). Target table stored as parquet file (I chose it by [advice](http://stackoverflow.com/a/34533196)), but it can be any other needed format. If it step fails - exit with code 3.
+At the second step, we insert data from temp table into the target table with adding current timestamp for maintaining data load history. Here we can do any needed transformations (add additional columns, remove duplicates, incremental load etc.). Target table stored as parquet file (I chose it by [advice](http://stackoverflow.com/a/34533196)), but it can be any other needed format. If it step fails - exit with code 3.
 
-Finally it truncate temp table for save the space. We dont need to exit here if errors occurred, because the data is already in target table (and of course it need to check error on truncating manually). 
+Finally it truncate temp table for save the space. We dont need to exit here if errors occurred, because the data is already in target table (and of course, it need to check error on truncating manually). 
 
-After all script queries the target table and compare it number of rows with an actual number of rows in the file and print the result.
+After all, script queries the target table, compare it number of rows with an actual number of rows in the file, and print the result.
