@@ -62,9 +62,9 @@ The loading process divides into two steps:
  - loading into temp table;
  - loading into target table;
 
-At the first step script uses hive standard data loading mechanism (LOAD DATA .. INPATH .. INTO TABLE, that just copies the file into the table directory) to load file into temp table as is, but with a slight nuance: temp table also hides (the row is still in HDFS file) the header row (tblproperties("skip.header.line.count"="1")). If it step fails - exit with code 2.
+At the first step script uses hive standard data loading mechanism (LOAD DATA .. INPATH .. INTO TABLE, that just copies the file into the table directory) to load file into temp table as is, but with a slight nuance: temp table also hides (the row is still in HDFS file) the header row (tblproperties("skip.header.line.count"="1")). If this step fails - exit with code 2.
 
-At the second step, we insert data from temp table into the target table with adding current timestamp for maintaining data load history. Here we can do any needed transformations (add additional columns, remove duplicates, incremental load etc.). Target table stored as parquet file (I chose it by [advice](http://stackoverflow.com/a/34533196)), but it can be any other needed format. If it step fails - exit with code 3.
+At the second step, we insert data from temp table into the target table with adding current timestamp for maintaining data load history. Here we can do any needed transformations (add additional columns, remove duplicates, incremental load etc.). Target table stored as parquet file (I chose it by [advice](http://stackoverflow.com/a/34533196)), but it can be any other needed format. If this step fails - exit with code 3.
 
 Finally it truncate temp table for save the space. We dont need to exit here if errors occurred, because the data is already in target table (and of course, it need to check error on truncating manually). 
 
